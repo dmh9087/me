@@ -837,6 +837,168 @@ textarea.input-sketch {
   }
 }
 
+/* ===== 进制转换器 ===== */
+.converter-subtitle {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  color: var(--copper);
+  letter-spacing: 4px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.converter-box {
+  max-width: 550px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+/* 数码管显示屏 */
+.nixie-display {
+  width: 100%;
+  background: #1a1a0f;
+  border: 3px solid #333;
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  text-align: right;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 4px 4px 0 rgba(44,62,80,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 微妙扫描线 */
+.nixie-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+}
+
+.nixie-text {
+  font-family: 'Courier New', monospace;
+  font-size: 2.4rem;
+  font-weight: bold;
+  color: #7cfc7c;
+  text-shadow: 0 0 8px rgba(124,252,124,0.6), 0 0 20px rgba(124,252,124,0.2);
+  word-break: break-all;
+  display: block;
+  min-height: 1.2em;
+}
+
+.nixie-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #5a8f7b;
+  position: absolute;
+  top: 8px;
+  left: 16px;
+}
+
+/* 输入框 */
+.converter-input-row {
+  width: 100%;
+}
+
+.converter-input {
+  width: 100%;
+  font-family: 'Courier New', monospace !important;
+  font-size: 1.2rem !important;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+/* 进制选择按钮 */
+.base-selector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.base-btn {
+  font-family: var(--font-decor);
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  background: #fffef9;
+  border: 2px solid var(--ink-light);
+  border-radius: 10px 3px 10px 3px / 3px 10px 3px 10px;
+  cursor: pointer;
+  color: var(--ink-light);
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.base-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.base-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  box-shadow: 2px 2px 0 rgba(44,62,80,0.2);
+}
+
+/* 结果卡片 */
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.result-card {
+  background: #fffef9;
+  border: 2px dashed var(--ink-light);
+  border-radius: 10px 3px 10px 3px / 3px 10px 3px 10px;
+  padding: 0.8rem 1rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.result-card.highlight {
+  border-color: var(--gold);
+  border-style: solid;
+  background: rgba(194,164,74,0.08);
+}
+
+.result-label {
+  font-family: var(--font-decor);
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  margin-bottom: 0.3rem;
+  letter-spacing: 1px;
+}
+
+.result-value {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  color: var(--ink);
+  word-break: break-all;
+  min-height: 1.3em;
+}
+
+/* 提示文字 */
+.converter-hint {
+  font-family: var(--font-decor);
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  text-align: center;
+  opacity: 0.7;
+}
+
 /* ===== 响应式 ===== */
 
 /* --- 平板 & 手机 (≤768px) --- */
@@ -987,6 +1149,26 @@ textarea.input-sketch {
     font-size: 1.5rem;
   }
 
+  /* 进制转换器 */
+  .nixie-text {
+    font-size: 1.8rem;
+  }
+
+  .base-btn {
+    min-width: 70px;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.7rem;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .result-value {
+    font-size: 0.95rem;
+  }
+
   /* 按钮增大触摸区 */
   .btn-sketch {
     padding: 0.7rem 1.6rem;
@@ -1089,6 +1271,34 @@ textarea.input-sketch {
 
   .contact-row {
     gap: 0.7rem;
+  }
+
+  /* 进制转换器 */
+  .nixie-text {
+    font-size: 1.5rem;
+  }
+
+  .base-selector {
+    gap: 0.3rem;
+  }
+
+  .base-btn {
+    min-width: 60px;
+    font-size: 0.72rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+
+  .result-card {
+    padding: 0.5rem;
+  }
+
+  .result-value {
+    font-size: 0.85rem;
   }
 
   /* 通用缩小 */

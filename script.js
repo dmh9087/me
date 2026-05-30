@@ -738,6 +738,122 @@ function initArticles() {
   renderArticles();
 }
 
+/* ===== 进制转换器 ===== */
+function initConverter() {
+  const input = document.getElementById('convInput');
+  const baseBtns = document.querySelectorAll('.base-btn');
+  const nixieValue = document.getElementById('nixieValue');
+  const nixieLabel = document.getElementById('nixieLabel');
+  const hint = document.getElementById('convHint');
+  const resEls = {
+    2:  document.getElementById('resBin'),
+    8:  document.getElementById('resOct'),
+    10: document.getElementById('resDec'),
+    16: document.getElementById('resHex'),
+  };
+  const cards = document.querySelectorAll('.result-card');
+
+  let currentBase = 10;
+
+  const baseNames = { 2: 'BIN', 8: 'OCT', 10: 'DEC', 16: 'HEX' };
+
+  // 验证输入对应当前进制是否合法
+  function isValidForBase(val, base) {
+    const regexMap = {
+      2:  /^[01]+$/,
+      8:  /^[0-7]+$/,
+      10: /^[0-9]+$/,
+      16: /^[0-9a-fA-F]+$/,
+    };
+    return regexMap[base].test(val);
+  }
+
+  function convert() {
+    const raw = input.value.trim();
+
+    // 清空结果
+    if (!raw) {
+      Object.values(resEls).forEach(el => { if (el) el.textContent = '—'; });
+      nixieValue.textContent = '0';
+      nixieLabel.textContent = baseNames[currentBase];
+      hint.textContent = '👆 先选择输入进制，再输入数字，结果实时显示';
+      hint.style.color = '';
+      cards.forEach(c => c.classList.remove('highlight'));
+      return;
+    }
+
+    // 验证
+    if (!isValidForBase(raw, currentBase)) {
+      nixieValue.textContent = 'ERROR';
+      nixieValue.style.color = '#ff6666';
+      nixieValue.style.textShadow = '0 0 8px rgba(255,100,100,0.6)';
+      hint.textContent = `⚠️ 输入不合法 — 不是有效的 ${baseNames[currentBase]} 数字`;
+      hint.style.color = '#c44';
+      Object.values(resEls).forEach(el => { if (el) el.textContent = '—'; });
+      cards.forEach(c => c.classList.remove('highlight'));
+      return;
+    }
+
+    // 解析 & 转换
+    const decimal = parseInt(raw, currentBase);
+
+    if (isNaN(decimal)) {
+      nixieValue.textContent = 'ERROR';
+      nixieValue.style.color = '#ff6666';
+      return;
+    }
+
+    // 更新显示屏
+    nixieValue.style.color = '#7cfc7c';
+    nixieValue.style.textShadow = '0 0 8px rgba(124,252,124,0.6), 0 0 20px rgba(124,252,124,0.2)';
+    nixieValue.textContent = decimal.toString(10);
+    nixieLabel.textContent = baseNames[currentBase];
+
+    // 更新四个结果
+    const results = {
+      2:  decimal.toString(2),
+      8:  decimal.toString(8),
+      10: decimal.toString(10),
+      16: decimal.toString(16).toUpperCase(),
+    };
+
+    Object.entries(results).forEach(([base, val]) => {
+      const el = resEls[base];
+      if (el) el.textContent = val;
+    });
+
+    // 高亮当前进制的结果卡片
+    cards.forEach(c => {
+      const cardBase = parseInt(c.dataset.base, 10);
+      if (cardBase === currentBase) {
+        c.classList.add('highlight');
+      } else {
+        c.classList.remove('highlight');
+      }
+    });
+
+    hint.textContent = `✅ ${baseNames[currentBase]} → BIN / OCT / DEC / HEX`;
+    hint.style.color = '';
+  }
+
+  // 进制选择
+  if (baseBtns.length) {
+    baseBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        baseBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentBase = parseInt(btn.dataset.base, 10);
+        convert();
+      });
+    });
+  }
+
+  // 实时输入
+  if (input) {
+    input.addEventListener('input', convert);
+  }
+}
+
 /* ===== 统一初始化入口 ===== */
 document.addEventListener('DOMContentLoaded', () => {
   // 打字机
@@ -768,6 +884,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 标签云
   initTagCloud();
+
+  // 进制转换器
+  initConverter();
 
   // 文章区
   initArticles();

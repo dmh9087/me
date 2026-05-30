@@ -26,6 +26,7 @@
       <a href="#hero" class="nav-link active">首页</a>
       <a href="#about" class="nav-link">关于</a>
       <a href="#skills" class="nav-link">技术栈</a>
+      <a href="#converter" class="nav-link">进制转换</a>
       <a href="#projects" class="nav-link">项目</a>
       <a href="#articles" class="nav-link">文章</a>
       <a href="#messages" class="nav-link">留言墙</a>
@@ -65,6 +66,56 @@
     <h2 class="section-title">技术栈</h2>
     <div class="tag-cloud" id="tagCloud">
       <!-- JS 动态生成标签 -->
+    </div>
+  </section>
+
+  <!-- 进制转换器 -->
+  <section class="section converter" id="converter">
+    <h2 class="section-title">进制转换器</h2>
+    <p class="converter-subtitle">BIN ⇄ OCT ⇄ DEC ⇄ HEX</p>
+
+    <div class="converter-box">
+      <!-- 数码管显示屏 -->
+      <div class="nixie-display" id="nixieDisplay">
+        <span class="nixie-text" id="nixieValue">0</span>
+        <span class="nixie-label" id="nixieLabel">DEC</span>
+      </div>
+
+      <!-- 输入区 -->
+      <div class="converter-input-row">
+        <input type="text" class="input-sketch converter-input" id="convInput"
+               placeholder="输入数字..." maxlength="32" autocomplete="off">
+      </div>
+
+      <!-- 进制选择按钮 -->
+      <div class="base-selector" id="baseSelector">
+        <button class="base-btn active" data-base="10">十进制 DEC</button>
+        <button class="base-btn" data-base="16">十六进制 HEX</button>
+        <button class="base-btn" data-base="8">八进制 OCT</button>
+        <button class="base-btn" data-base="2">二进制 BIN</button>
+      </div>
+
+      <!-- 转换结果 -->
+      <div class="result-grid" id="resultGrid">
+        <div class="result-card" data-base="2">
+          <div class="result-label">BIN 二进制</div>
+          <div class="result-value" id="resBin">—</div>
+        </div>
+        <div class="result-card" data-base="8">
+          <div class="result-label">OCT 八进制</div>
+          <div class="result-value" id="resOct">—</div>
+        </div>
+        <div class="result-card" data-base="10">
+          <div class="result-label">DEC 十进制</div>
+          <div class="result-value" id="resDec">—</div>
+        </div>
+        <div class="result-card" data-base="16">
+          <div class="result-label">HEX 十六进制</div>
+          <div class="result-value" id="resHex">—</div>
+        </div>
+      </div>
+
+      <p class="converter-hint" id="convHint">👆 先选择输入进制，再输入数字，结果实时显示</p>
     </div>
   </section>
 
