@@ -70,12 +70,15 @@ function initParticles() {
   resize();
   window.addEventListener('resize', resize);
 
+  // 检测是否为触摸设备（降低粒子密度）
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const particleRate = isTouchDevice ? 1 : 2;
+
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
 
-    // 在鼠标周围生成粒子
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < particleRate; i++) {
       particles.push({
         x: mouseX + (Math.random() - 0.5) * 20,
         y: mouseY + (Math.random() - 0.5) * 20,
@@ -87,6 +90,25 @@ function initParticles() {
       });
     }
   });
+
+  // 触摸设备手指跟随
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+      mouseX = e.touches[0].clientX;
+      mouseY = e.touches[0].clientY;
+      for (let i = 0; i < particleRate; i++) {
+        particles.push({
+          x: mouseX + (Math.random() - 0.5) * 20,
+          y: mouseY + (Math.random() - 0.5) * 20,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
+          life: 1,
+          decay: 0.015 + Math.random() * 0.03,
+          size: 1.5 + Math.random() * 3,
+        });
+      }
+    }
+  }, { passive: true });
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -140,10 +162,20 @@ function initNavigation() {
 
   // 汉堡菜单切换
   if (navToggle && navInner) {
-    navToggle.addEventListener('click', () => {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       navInner.classList.toggle('open');
     });
   }
+
+  // 移动端点击页面其他地方关闭菜单
+  document.addEventListener('click', (e) => {
+    if (navInner && navInner.classList.contains('open')) {
+      if (!navInner.contains(e.target) && e.target !== navToggle) {
+        navInner.classList.remove('open');
+      }
+    }
+  });
 
   // 滚动时高亮当前板块
   function highlightNav() {
@@ -428,9 +460,15 @@ function initCircuitBoard() {
   const fragment = document.createDocumentFragment();
   const w = window.innerWidth;
   const h = window.innerHeight;
+  const isMobile = w < 768;
+
+  // 移动端降低密度
+  const hStep = isMobile ? 180 : 100;
+  const vStep = isMobile ? 160 : 80;
+  const ledCount = isMobile ? 12 : 30;
 
   // 生成横线
-  for (let y = 80; y < h; y += 100 + Math.random() * 60) {
+  for (let y = 80; y < h; y += hStep + Math.random() * 60) {
     const line = document.createElement('div');
     line.className = 'circuit-line horizontal';
     line.style.cssText = `
@@ -440,15 +478,17 @@ function initCircuitBoard() {
     `;
     fragment.appendChild(line);
 
-    // 节点
-    const dot = document.createElement('div');
-    dot.className = 'circuit-dot';
-    dot.style.cssText = `top: ${y - 3}px; left: ${Math.random() * w}px;`;
-    fragment.appendChild(dot);
+    // 节点（移动端减半）
+    if (!isMobile || Math.random() > 0.4) {
+      const dot = document.createElement('div');
+      dot.className = 'circuit-dot';
+      dot.style.cssText = `top: ${y - 3}px; left: ${Math.random() * w}px;`;
+      fragment.appendChild(dot);
+    }
   }
 
   // 生成竖线
-  for (let x = 60; x < w; x += 80 + Math.random() * 80) {
+  for (let x = 60; x < w; x += vStep + Math.random() * 80) {
     const line = document.createElement('div');
     line.className = 'circuit-line vertical';
     line.style.cssText = `
@@ -461,7 +501,7 @@ function initCircuitBoard() {
 
   // 生成 LED 点
   const ledColors = ['red', 'green', 'yellow'];
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < ledCount; i++) {
     const led = document.createElement('div');
     const color = ledColors[Math.floor(Math.random() * 3)];
     led.className = `circuit-led ${color}`;
