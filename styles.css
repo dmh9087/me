@@ -1,5 +1,166 @@
 /* ===== Google Fonts (imported in HTML) ===== */
 
+/* ===== 星空欢迎页 ===== */
+.star-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.star-gate.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.star-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.star-gate-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.star-title {
+  font-family: var(--font-title);
+  font-size: 3.5rem;
+  color: #e8e0d0;
+  text-shadow: 0 0 30px rgba(255,255,200,0.3), 0 0 60px rgba(180,200,255,0.2);
+  animation: title-float 3s ease-in-out infinite;
+  margin: 0;
+}
+
+@keyframes title-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.star-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: #a0b0c0;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+/* 进入按钮 */
+.star-enter-btn {
+  margin-top: 1.5rem;
+  padding: 0.8rem 3rem;
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  background: transparent;
+  color: #e8e0d0;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50px;
+  cursor: pointer;
+  letter-spacing: 6px;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.star-enter-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.05);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.star-enter-btn:hover {
+  border-color: rgba(255,255,255,0.9);
+  box-shadow: 0 0 30px rgba(180,200,255,0.3), 0 0 60px rgba(180,200,255,0.1);
+  transform: scale(1.05);
+  letter-spacing: 10px;
+}
+
+.star-enter-btn:hover::before {
+  opacity: 1;
+}
+
+.star-enter-btn:active {
+  transform: scale(0.97);
+}
+
+.btn-enter-arrow {
+  display: inline-block;
+  transition: transform 0.3s;
+  font-size: 1.5rem;
+}
+
+.star-enter-btn:hover .btn-enter-arrow {
+  transform: translateX(6px);
+}
+
+.star-hint {
+  font-family: var(--font-decor);
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.3);
+  margin-top: 0.5rem;
+  animation: hint-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* 移动端适配星空页 */
+@media (max-width: 768px) {
+  .star-title {
+    font-size: 2.2rem;
+  }
+
+  .star-subtitle {
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+
+  .star-enter-btn {
+    font-size: 1.4rem;
+    padding: 0.6rem 2.5rem;
+    letter-spacing: 4px;
+  }
+
+  .star-enter-btn:hover {
+    letter-spacing: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .star-title {
+    font-size: 1.7rem;
+  }
+
+  .star-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .star-enter-btn {
+    font-size: 1.2rem;
+    padding: 0.5rem 2rem;
+  }
+}
+
 /* ===== CSS Variables ===== */
 :root {
   --paper: #fdf6e3;

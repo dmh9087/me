@@ -1,3 +1,137 @@
+/* ===== 星空欢迎页 ===== */
+(function() {
+  // 同一次会话只显示一次
+  if (sessionStorage.getItem('starGateEntered')) return;
+
+  const gate = document.getElementById('starGate');
+  const canvas = document.getElementById('starCanvas');
+  const btnEnter = document.getElementById('btnEnter');
+  if (!gate || !canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  let shootingStars = [];
+  let animationId;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', () => {
+    resize();
+    initStars();
+  });
+
+  function initStars() {
+    stars = [];
+    const count = Math.floor((canvas.width * canvas.height) / 800); // 密度自适应
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 0.5,
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinkleOffset: Math.random() * Math.PI * 2,
+        hue: 200 + Math.random() * 60, // 蓝白到暖黄
+      });
+    }
+  }
+
+  function spawnShootingStar() {
+    shootingStars.push({
+      x: Math.random() * canvas.width * 0.8,
+      y: Math.random() * canvas.height * 0.4,
+      vx: 4 + Math.random() * 6,
+      vy: 2 + Math.random() * 3,
+      life: 1,
+      decay: 0.008 + Math.random() * 0.015,
+      len: 60 + Math.random() * 100,
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 绘制星星
+    stars.forEach(s => {
+      s.twinkleOffset += s.twinkleSpeed;
+      const alpha = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(s.twinkleOffset));
+      const hue = s.hue;
+      const sat = 30 + Math.random() * 20;
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${hue}, ${sat}%, 80%, ${alpha})`;
+      ctx.fill();
+
+      // 亮星加光晕
+      if (s.r > 1.5 && alpha > 0.75) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue}, 40%, 90%, ${alpha * 0.1})`;
+        ctx.fill();
+      }
+    });
+
+    // 绘制流星
+    shootingStars = shootingStars.filter(s => s.life > 0);
+    shootingStars.forEach(s => {
+      s.x += s.vx;
+      s.y += s.vy;
+      s.life -= s.decay;
+
+      const endX = s.x - s.vx * s.len * 0.02;
+      const endY = s.y - s.vy * s.len * 0.02;
+
+      const grad = ctx.createLinearGradient(s.x, s.y, endX, endY);
+      grad.addColorStop(0, `rgba(255,255,255,${s.life})`);
+      grad.addColorStop(1, `rgba(255,255,255,0)`);
+
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(endX, endY);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+
+    // 随机生成流星
+    if (Math.random() < 0.008) {
+      spawnShootingStar();
+    }
+
+    animationId = requestAnimationFrame(animate);
+  }
+
+  function enterSite() {
+    cancelAnimationFrame(animationId);
+    gate.classList.add('fade-out');
+    sessionStorage.setItem('starGateEntered', '1');
+    // 动画结束后移除 DOM
+    gate.addEventListener('transitionend', () => {
+      gate.remove();
+    }, { once: true });
+  }
+
+  // 按钮点击
+  if (btnEnter) {
+    btnEnter.addEventListener('click', enterSite);
+  }
+
+  // 按 Enter 键进入
+  document.addEventListener('keydown', function onEnter(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.removeEventListener('keydown', onEnter);
+      enterSite();
+    }
+  });
+
+  initStars();
+  animationId = requestAnimationFrame(animate);
+})();
+
 /* ===== 打字机效果 ===== */
 class Typewriter {
   constructor(element, texts, options = {}) {
