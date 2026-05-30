@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p docs/superpowers/specs)"
+    ],
+    "additionalDirectories": [
+      "d:\\claude\\test1\\docs\\superpowers"
+    ]
+  }
+}

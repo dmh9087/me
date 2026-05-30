@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的个人主页</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Gaegu:wght@300;400;700&family=Neucha&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- 鼠标粒子 Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- 电路板背景层 -->
+  <div class="circuit-bg" id="circuitBg"></div>
+
+  <!-- 导航栏 -->
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-link active">首页</a>
+      <a href="#about" class="nav-link">关于</a>
+      <a href="#skills" class="nav-link">技术栈</a>
+      <a href="#projects" class="nav-link">项目</a>
+      <a href="#articles" class="nav-link">文章</a>
+      <a href="#messages" class="nav-link">留言墙</a>
+      <a href="#music" class="nav-link">音乐角</a>
+      <a href="#footer" class="nav-link">联系</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单">☰</button>
+  </nav>
+
+  <!-- Hero 首屏 -->
+  <section class="section hero" id="hero">
+    <h1 class="hero-name">你好，我是风</h1>
+    <p class="hero-subtitle" id="typewriter"></p>
+    <div class="hero-decor">
+      <span class="led led-red"></span>
+      <span class="led led-green"></span>
+      <span class="led led-yellow"></span>
+    </div>
+  </section>
+
+  <!-- 关于我 -->
+  <section class="section about" id="about">
+    <h2 class="section-title">关于我</h2>
+    <div class="note-card">
+      <p class="note-text">我是一名电子信息工程专业的学生，热爱硬件设计与软件开发，喜欢在电路和代码之间寻找创造的乐趣。</p>
+      <p class="note-text">目前专注于嵌入式系统、PCB 设计和前端开发，相信技术与创意可以碰撞出有趣的火花。</p>
+    </div>
+    <div class="edu-card">
+      <h3 class="edu-title">教育经历</h3>
+      <p>电子信息工程专业 本科在读</p>
+      <p>主要课程：数字电路、模拟电路、嵌入式系统、信号与系统</p>
+    </div>
+  </section>
+
+  <!-- 技术栈 -->
+  <section class="section skills" id="skills">
+    <h2 class="section-title">技术栈</h2>
+    <div class="tag-cloud" id="tagCloud">
+      <!-- JS 动态生成标签 -->
+    </div>
+  </section>
+
+  <!-- 项目案例 -->
+  <section class="section projects" id="projects">
+    <h2 class="section-title">项目案例</h2>
+    <div class="project-grid" id="projectGrid">
+      <!-- JS 动态生成项目卡片 -->
+    </div>
+  </section>
+
+  <!-- 文章区 -->
+  <section class="section articles" id="articles">
+    <h2 class="section-title">我的文章</h2>
+    <button class="btn-sketch" id="btnNewArticle" style="margin-bottom:1.5rem;">✏️ 写新文章</button>
+    <div class="article-editor" id="articleEditor" style="display:none;">
+      <form class="article-form" id="articleForm">
+        <input type="text" class="input-sketch" id="articleTitle" placeholder="文章标题" maxlength="50" required>
+        <textarea class="input-sketch article-textarea" id="articleContent" placeholder="在这里写下你的想法..." rows="8" required></textarea>
+        <div class="article-form-actions">
+          <button type="button" class="btn-sketch btn-cancel" id="btnCancelArticle">取消</button>
+          <button type="submit" class="btn-sketch">发布 📝</button>
+        </div>
+        <input type="hidden" id="editIndex" value="-1">
+      </form>
+    </div>
+    <div class="article-list" id="articleList">
+      <!-- JS 动态渲染文章卡片 -->
+    </div>
+  </section>
+
+  <!-- 留言墙 -->
+  <section class="section messages" id="messages">
+    <h2 class="section-title">留言墙</h2>
+    <form class="msg-form" id="msgForm">
+      <input type="text" class="input-sketch" id="msgName" placeholder="你的昵称" maxlength="20" required>
+      <textarea class="input-sketch" id="msgContent" placeholder="写下你想说的话..." rows="3" maxlength="200" required></textarea>
+      <button type="submit" class="btn-sketch">贴上去 📌</button>
+    </form>
+    <div class="sticky-wall" id="stickyWall">
+      <!-- JS 动态渲染便利贴 -->
+    </div>
+  </section>
+
+  <!-- 音乐角 -->
+  <section class="section music" id="music">
+    <h2 class="section-title">音乐角</h2>
+    <div class="radio-box">
+      <div class="radio-body">
+        <div class="radio-display" id="radioDisplay">
+          <span class="radio-text">📻 等待播放...</span>
+        </div>
+        <form class="music-form" id="musicForm">
+          <input type="text" class="input-sketch" id="musicTitle" placeholder="歌曲名称" maxlength="30" required>
+          <input type="url" class="input-sketch" id="musicUrl" placeholder="音频 URL 或网易云链接 (.mp3 / 163.com)" required>
+          <button type="submit" class="btn-sketch">添加到列表 🎵</button>
+        </form>
+        <ul class="playlist" id="playlist">
+          <!-- JS 动态渲染播放列表 -->
+        </ul>
+        <audio id="audioPlayer" class="audio-player" controls></audio>
+        <div id="neteasePlayer" class="netease-player" style="display:none;"></div>
+      </div>
+      <div class="radio-antenna"></div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="section footer" id="footer">
+    <h2 class="section-title">联系我</h2>
+    <div class="contact-row">
+      <a href="mailto:your@email.com" class="contact-icon" title="邮箱">
+        <span class="icon-envelope">✉</span>
+      </a>
+      <a href="https://github.com/yourname" class="contact-icon" title="GitHub">
+        <span class="icon-github">⌨</span>
+      </a>
+      <a href="#" class="contact-icon" title="微信">
+        <span class="icon-wechat">💬</span>
+      </a>
+    </div>
+    <p class="footer-note">用 ❤️ 和 🔌 手工绘制</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
