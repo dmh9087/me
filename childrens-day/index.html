@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FF6B9D">
+<title>🎈 六一儿童节快乐 🎈</title>
+<style>
+/* ===== Reset & Base ===== */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html {
+  font-size: 18px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100svh;
+  background: linear-gradient(135deg, #fce4ec 0%, #fff3e0 25%, #fff9c4 50%, #e1f5fe 75%, #f3e5f5 100%);
+  background-attachment: fixed;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  overflow-x: hidden;
+  position: relative;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ===== Canvas Background ===== */
+#bubbleCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ===== Balloons Side Decor ===== */
+.balloon {
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  font-size: 3rem;
+  animation: balloon-float 6s ease-in-out infinite;
+  filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15));
+}
+.balloon:nth-child(1) { left:5%; top:20%; animation-delay:0s; animation-duration:7s; }
+.balloon:nth-child(2) { right:5%; top:30%; animation-delay:1.5s; animation-duration:6.5s; }
+.balloon:nth-child(3) { left:10%; top:60%; animation-delay:3s; animation-duration:7.5s; font-size:2.5rem; }
+.balloon:nth-child(4) { right:8%; top:55%; animation-delay:4.5s; animation-duration:6s; font-size:2.5rem; }
+.balloon:nth-child(5) { left:3%; top:40%; animation-delay:2s; animation-duration:8s; font-size:2rem; }
+.balloon:nth-child(6) { right:12%; top:15%; animation-delay:5s; animation-duration:7s; font-size:2rem; }
+
+.balloon-string {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent);
+  transform-origin: top center;
+  animation: string-sway 3s ease-in-out infinite;
+}
+
+@keyframes balloon-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-25px) rotate(3deg); }
+}
+
+@keyframes string-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem 5rem;
+  min-height: 100svh;
+}
+
+/* ===== Title ===== */
+.title-wrap {
+  text-align: center;
+  margin: 2rem 0 1.5rem;
+  position: relative;
+}
+
+.title-main {
+  font-size: 3.2rem;
+  font-weight: 900;
+  background: linear-gradient(45deg, #FF6B9D, #FF8A65, #FFD54F, #4FC3F7, #BA68C8, #FF6B9D);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: title-sparkle 3s ease-in-out infinite, title-sway 4s ease-in-out infinite;
+  text-shadow: none;
+  filter: drop-shadow(3px 3px 2px rgba(255,107,157,0.3));
+  line-height: 1.3;
+}
+
+@keyframes title-sparkle {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes title-sway {
+  0%, 100% { transform: rotate(-1.5deg) scale(1); }
+  25% { transform: rotate(1deg) scale(1.03); }
+  50% { transform: rotate(-1deg) scale(1); }
+  75% { transform: rotate(1.5deg) scale(1.02); }
+}
+
+.title-sub {
+  font-size: 1.2rem;
+  color: #FF7043;
+  margin-top: 0.8rem;
+  letter-spacing: 3px;
+  animation: subtitle-bounce 2s ease-in-out infinite;
+}
+
+@keyframes subtitle-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.8; }
+  50% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* Star sparkles around title */
+.title-sparkle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.2rem;
+  animation: sparkle-float 2s ease-in-out infinite;
+}
+.title-sparkle:nth-child(1) { top:-10px; left:-20px; animation-delay:0s; }
+.title-sparkle:nth-child(2) { top:-15px; right:-25px; animation-delay:0.6s; }
+.title-sparkle:nth-child(3) { bottom:5px; left:-30px; animation-delay:1.2s; }
+.title-sparkle:nth-child(4) { bottom:0px; right:-20px; animation-delay:0.3s; }
+.title-sparkle:nth-child(5) { top:50%; left:-40px; animation-delay:0.9s; font-size:1rem; }
+.title-sparkle:nth-child(6) { top:50%; right:-35px; animation-delay:1.5s; font-size:1rem; }
+
+@keyframes sparkle-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+  50% { transform: translateY(-12px) scale(1.4); opacity: 1; }
+}
+
+/* ===== Blessing Cards ===== */
+.blessings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  max-width: 800px;
+  margin: 1.5rem 0 2rem;
+}
+
+.blessing-card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(10px);
+  border: 3px solid;
+  border-radius: 20px 8px 20px 8px / 8px 20px 8px 20px;
+  padding: 1.2rem 1.5rem;
+  max-width: 220px;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #5D4037;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  animation: card-enter 0.6s ease-out backwards;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+}
+
+.blessing-card:hover {
+  transform: translateY(-5px) rotate(0deg) !important;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.blessing-card:nth-child(1) {
+  border-color: #FF6B9D;
+  background: rgba(255,107,157,0.12);
+  transform: rotate(-2deg);
+  animation-delay: 0.1s;
+}
+.blessing-card:nth-child(2) {
+  border-color: #FF8A65;
+  background: rgba(255,138,101,0.12);
+  transform: rotate(1.5deg);
+  animation-delay: 0.25s;
+}
+.blessing-card:nth-child(3) {
+  border-color: #4FC3F7;
+  background: rgba(79,195,247,0.12);
+  transform: rotate(-1deg);
+  animation-delay: 0.4s;
+}
+.blessing-card:nth-child(4) {
+  border-color: #BA68C8;
+  background: rgba(186,104,200,0.12);
+  transform: rotate(2deg);
+  animation-delay: 0.55s;
+}
+.blessing-card:nth-child(5) {
+  border-color: #FFD54F;
+  background: rgba(255,213,79,0.12);
+  transform: rotate(-1.5deg);
+  animation-delay: 0.7s;
+}
+.blessing-card:nth-child(6) {
+  border-color: #81C784;
+  background: rgba(129,199,132,0.12);
+  transform: rotate(0.8deg);
+  animation-delay: 0.85s;
+}
+
+.blessing-card .card-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Bow decoration on cards */
+.blessing-card::before {
+  content: '🎀';
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+}
+
+/* ===== Click Pop Interaction ===== */
+.pop-item {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  font-size: 2.5rem;
+  animation: pop-up 1.2s ease-out forwards;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+@keyframes pop-up {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-30deg);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(-50%, -90%) scale(1.3) rotate(10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -180%) scale(0.8) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+/* Click hint */
+.click-hint {
+  font-size: 0.9rem;
+  color: #BA68C8;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+  animation: hint-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+
+/* ===== Music Toggle ===== */
+.music-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 200;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.8);
+  background: rgba(255,107,157,0.85);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(255,107,157,0.35);
+  transition: all 0.3s;
+  animation: music-bounce 2s ease-in-out infinite;
+}
+
+.music-toggle:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 24px rgba(255,107,157,0.5);
+}
+
+.music-toggle.muted {
+  background: rgba(180,180,180,0.7);
+  border-color: rgba(200,200,200,0.6);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  animation: none;
+}
+
+.music-toggle.muted::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 24px;
+  background: #fff;
+  border-radius: 1px;
+  transform: rotate(-45deg);
+}
+
+@keyframes music-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (max-width: 480px) {
+  .music-toggle {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+/* ===== Footer ===== */
+.footer-note {
+  margin-top: auto;
+  padding-top: 2rem;
+  font-size: 0.85rem;
+  color: #999;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+
+  .title-main { font-size: 2.4rem; }
+  .title-sub { font-size: 1rem; }
+
+  .blessings { gap: 1rem; }
+  .blessing-card {
+    max-width: 160px;
+    padding: 1rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .balloon {
+    font-size: 2.2rem;
+  }
+  .balloon:nth-child(3),
+  .balloon:nth-child(4) {
+    font-size: 1.8rem;
+  }
+  .balloon:nth-child(5),
+  .balloon:nth-child(6) {
+    display: none; /* 小屏隐藏部分气球 */
+  }
+}
+
+@media (max-width: 480px) {
+  html { font-size: 15px; }
+
+  .title-main { font-size: 1.9rem; }
+  .title-sub { font-size: 0.9rem; letter-spacing:1px; }
+
+  .blessings {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .blessing-card {
+    max-width: 280px;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .blessing-card .card-icon { font-size: 1.5rem; }
+
+  .balloon { font-size: 1.8rem; }
+  .balloon:nth-child(4),
+  .balloon:nth-child(5),
+  .balloon:nth-child(6) {
+    display: none;
+  }
+
+  .click-hint { font-size: 0.75rem; }
+
+  /* 移动端减小触摸弹出元素尺寸 */
+  .pop-item { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Balloons -->
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+
+<!-- Bubble & Star Canvas -->
+<canvas id="bubbleCanvas"></canvas>
+
+<!-- Main Content -->
+<div class="main-content">
+
+  <!-- Title -->
+  <div class="title-wrap">
+    <span class="title-sparkle">⭐</span>
+    <span class="title-sparkle">✨</span>
+    <span class="title-sparkle">🌟</span>
+    <span class="title-sparkle">💫</span>
+    <span class="title-sparkle">⭐</span>
+    <span class="title-sparkle">✨</span>
+    <h1 class="title-main">🎂 六一儿童节快乐 🎂</h1>
+    <p class="title-sub">愿我们永远保持一颗童心 ❤️</p>
+  </div>
+
+  <!-- Blessing Cards -->
+  <div class="blessings">
+    <div class="blessing-card">
+      <span class="card-icon">🍭</span>
+      愿你童心未泯<br>快乐永驻心间
+    </div>
+    <div class="blessing-card">
+      <span class="card-icon">🎠</span>
+      愿你的笑容<br>如阳光般灿烂
+    </div>
+    <div class="blessing-card">
+      <span class="card-icon">🧸</span>
+      愿你被世界<br>温柔以待每一天
+    </div>
+    <div class="blessing-card">
+      <span class="card-icon">🫧</span>
+      愿你的梦想<br>像泡泡一样缤纷
+    </div>
+    <div class="blessing-card">
+      <span class="card-icon">🎪</span>
+      愿你永远好奇<br>永远热泪盈眶
+    </div>
+    <div class="blessing-card">
+      <span class="card-icon">🍬</span>
+      愿你拥有<br>最简单的快乐
+    </div>
+  </div>
+
+  <!-- Click Hint -->
+  <p class="click-hint">👆 点一下页面试试？有惊喜哦～</p>
+
+  <!-- Music Toggle -->
+  <button class="music-toggle" id="musicToggle" aria-label="音乐开关" title="音乐开关">🎵</button>
+
+  <!-- Footer -->
+  <p class="footer-note">🍼 用 ❤️ 和 🎨 绘制 · 送给最可爱的你</p>
+
+</div>
+
+<script>
+/* ===== Canvas: Falling Bubbles & Stars ===== */
+(function() {
+  const canvas = document.getElementById('bubbleCanvas');
+  const ctx = canvas.getContext('2d');
+  let items = [];
+  let animId;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 200);
+  });
+
+  // Item types: bubble (circle with shine), star (text)
+  const colors = [
+    'rgba(255,107,157,0.5)',   // pink
+    'rgba(255,138,101,0.5)',   // orange
+    'rgba(255,213,79,0.5)',    // yellow
+    'rgba(79,195,247,0.5)',    // blue
+    'rgba(186,104,200,0.5)',   // purple
+    'rgba(129,199,132,0.5)',   // green
+  ];
+
+  const starChars = ['⭐', '✨', '🌟', '💫', '🎀', '🧸', '🍭', '🎈'];
+
+  function spawnItem() {
+    const isStar = Math.random() < 0.25;
+    items.push({
+      type: isStar ? 'star' : 'bubble',
+      x: Math.random() * canvas.width,
+      y: canvas.height + 40,
+      size: isStar ? 14 + Math.random() * 18 : 8 + Math.random() * 28,
+      speed: 0.4 + Math.random() * 1.2,
+      drift: (Math.random() - 0.5) * 0.8,
+      opacity: 0.5 + Math.random() * 0.5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 1.5,
+      char: starChars[Math.floor(Math.random() * starChars.length)],
+    });
+  }
+
+  // Initial population
+  const isMobile = window.innerWidth < 768;
+  const initCount = isMobile ? 20 : 35;
+  for (let i = 0; i < initCount; i++) {
+    const item = {
+      type: Math.random() < 0.25 ? 'star' : 'bubble',
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() < 0.25 ? 14 + Math.random() * 18 : 8 + Math.random() * 28,
+      speed: 0.4 + Math.random() * 1.2,
+      drift: (Math.random() - 0.5) * 0.8,
+      opacity: 0.5 + Math.random() * 0.5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 1.5,
+      char: starChars[Math.floor(Math.random() * starChars.length)],
+    };
+    items.push(item);
+  }
+
+  // Spawn rate
+  let spawnInterval = isMobile ? 600 : 350;
+  let lastSpawn = 0;
+
+  function animate(timestamp) {
+    if (document.hidden) {
+      animId = requestAnimationFrame(animate);
+      return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Spawn new items
+    if (timestamp - lastSpawn > spawnInterval) {
+      spawnItem();
+      lastSpawn = timestamp;
+    }
+
+    // Cap items
+    const maxItems = isMobile ? 45 : 80;
+    if (items.length > maxItems) {
+      items.splice(0, items.length - maxItems);
+    }
+
+    // Draw & update
+    items = items.filter(item => {
+      item.y -= item.speed;
+      item.x += item.drift;
+      item.rotation += item.rotSpeed;
+
+      if (item.y < -60 || item.x < -60 || item.x > canvas.width + 60) {
+        return false;
+      }
+
+      if (item.type === 'bubble') {
+        // Draw bubble
+        ctx.save();
+        ctx.globalAlpha = item.opacity;
+        ctx.beginPath();
+        ctx.arc(item.x, item.y, item.size, 0, Math.PI * 2);
+        ctx.fillStyle = item.color;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Shine highlight
+        ctx.beginPath();
+        ctx.arc(item.x - item.size * 0.3, item.y - item.size * 0.3,
+                item.size * 0.25, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.fill();
+        ctx.restore();
+      } else {
+        // Draw star/emoji
+        ctx.save();
+        ctx.globalAlpha = item.opacity;
+        ctx.translate(item.x, item.y);
+        ctx.rotate(item.rotation * Math.PI / 180);
+        ctx.font = `${item.size}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(item.char, 0, 0);
+        ctx.restore();
+      }
+
+      return true;
+    });
+
+    animId = requestAnimationFrame(animate);
+  }
+
+  animId = requestAnimationFrame(animate);
+})();
+
+/* ===== Web Audio API 音效引擎 ===== */
+(function() {
+  let audioCtx = null;
+  let musicOn = true;
+  let bgTimer = null;
+  const toggleBtn = document.getElementById('musicToggle');
+
+  // 懒初始化（浏览器要求用户交互后才能播放音频）
+  function ensureCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    // 恢复被暂停的上下文
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  // 主音量节点
+  let masterGain = null;
+  function getMaster() {
+    if (!masterGain && audioCtx) {
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.35;
+      masterGain.connect(audioCtx.destination);
+    }
+    return masterGain;
+  }
+
+  /* --- 点击音效：清脆叮咚声 --- */
+  window.playClickSound = function() {
+    if (!musicOn) return;
+    const ctx = ensureCtx();
+    const master = getMaster();
+    if (!master) return;
+
+    const now = ctx.currentTime;
+
+    // 主音：明亮叮咚
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(880, now);
+    osc1.frequency.exponentialRampToValueAtTime(1320, now + 0.08);
+    osc1.frequency.exponentialRampToValueAtTime(1100, now + 0.2);
+    gain1.gain.setValueAtTime(0.5, now);
+    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+    osc1.connect(gain1);
+    gain1.connect(master);
+    osc1.start(now);
+    osc1.stop(now + 0.3);
+
+    // 泛音：增加亮度
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(1760, now);
+    osc2.frequency.exponentialRampToValueAtTime(2200, now + 0.06);
+    gain2.gain.setValueAtTime(0.2, now);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+    osc2.connect(gain2);
+    gain2.connect(master);
+    osc2.start(now);
+    osc2.stop(now + 0.2);
+
+    // 星星音效：极短高频点缀
+    const osc3 = ctx.createOscillator();
+    const gain3 = ctx.createGain();
+    osc3.type = 'sine';
+    osc3.frequency.setValueAtTime(2600, now);
+    gain3.gain.setValueAtTime(0.08, now);
+    gain3.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
+    osc3.connect(gain3);
+    gain3.connect(master);
+    osc3.start(now);
+    osc3.stop(now + 0.08);
+  };
+
+  /* --- 背景旋律：简单童谣片段（小星星变奏） --- */
+  const melodyNotes = [
+    // 小星星旋律：C C G G A A G
+    { freq: 523, dur: 0.4 },  // C
+    { freq: 523, dur: 0.4 },  // C
+    { freq: 784, dur: 0.4 },  // G
+    { freq: 784, dur: 0.4 },  // G
+    { freq: 880, dur: 0.4 },  // A
+    { freq: 880, dur: 0.4 },  // A
+    { freq: 784, dur: 0.8 },  // G
+    // F F E E D D C
+    { freq: 698, dur: 0.4 },  // F
+    { freq: 698, dur: 0.4 },  // F
+    { freq: 659, dur: 0.4 },  // E
+    { freq: 659, dur: 0.4 },  // E
+    { freq: 587, dur: 0.4 },  // D
+    { freq: 587, dur: 0.4 },  // D
+    { freq: 523, dur: 0.8 },  // C
+  ];
+
+  let melodyNoteIdx = 0;
+  function playNextNote() {
+    if (!musicOn || !audioCtx || audioCtx.state === 'suspended') return;
+    const master = getMaster();
+    if (!master) return;
+
+    const note = melodyNotes[melodyNoteIdx];
+    const ctx = audioCtx;
+    const now = ctx.currentTime;
+
+    // 用钟声模拟（软音头）
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(note.freq, now);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.18, now + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + note.dur);
+    osc.connect(gain);
+    gain.connect(master);
+    osc.start(now);
+    osc.stop(now + note.dur + 0.05);
+
+    // 和声
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(note.freq * 1.5, now);
+    gain2.gain.setValueAtTime(0, now);
+    gain2.gain.linearRampToValueAtTime(0.06, now + 0.02);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + note.dur * 0.7);
+    osc2.connect(gain2);
+    gain2.connect(master);
+    osc2.start(now);
+    osc2.stop(now + note.dur * 0.8);
+
+    melodyNoteIdx = (melodyNoteIdx + 1) % melodyNotes.length;
+  }
+
+  function startBackgroundMusic() {
+    if (!musicOn || !audioCtx) return;
+    stopBackgroundMusic();
+    melodyNoteIdx = Math.floor(Math.random() * melodyNotes.length);
+    // 每 2-3 秒一个音符，轻盈不吵闹
+    const interval = 2000 + Math.random() * 1000;
+    playNextNote();
+    bgTimer = setInterval(playNextNote, interval);
+  }
+
+  function stopBackgroundMusic() {
+    if (bgTimer) {
+      clearInterval(bgTimer);
+      bgTimer = null;
+    }
+  }
+
+  /* --- 音乐开关按钮 --- */
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      musicOn = !musicOn;
+      if (musicOn) {
+        toggleBtn.classList.remove('muted');
+        toggleBtn.textContent = '🎵';
+        ensureCtx();
+        startBackgroundMusic();
+      } else {
+        toggleBtn.classList.add('muted');
+        toggleBtn.textContent = '🔇';
+        stopBackgroundMusic();
+      }
+    });
+  }
+
+  // 首次用户交互时初始化音频上下文并开始背景音乐
+  function onFirstInteraction() {
+    ensureCtx();
+    if (musicOn && !bgTimer) {
+      // 延迟一小会儿再开始背景音乐，避免和点击音效打架
+      setTimeout(() => startBackgroundMusic(), 600);
+    }
+    document.removeEventListener('click', onFirstInteraction);
+    document.removeEventListener('touchstart', onFirstInteraction);
+  }
+  document.addEventListener('click', onFirstInteraction);
+  document.addEventListener('touchstart', onFirstInteraction, { passive: true });
+
+  // 页面隐藏时暂停，回来后恢复
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopBackgroundMusic();
+    } else if (musicOn && audioCtx) {
+      audioCtx.resume();
+      if (!bgTimer) startBackgroundMusic();
+    }
+  });
+})();
+
+/* ===== Click Interaction: Pop cute emoji & blessing ===== */
+(function() {
+  const popEmojis = ['🧸', '🍭', '🎈', '🎀', '🍬', '🎠', '🫧', '⭐', '🌟', '💝', '🎪', '🦄', '🍩', '🎨', '🌸', '🐣', '🎵', '🍼'];
+  const popBlessings = [
+    '要开心呀～', '你是最棒的！', '永远可爱！', '快乐加倍！',
+    '童心永驻 💕', '今天属于你！', '天真万岁！', '保持微笑～',
+    '好梦甜甜 🍬', '幸福满满！', '一起长大吧！', '永远年轻！',
+  ];
+
+  document.addEventListener('click', function(e) {
+    // Don't trigger on link clicks or the music toggle
+    if (e.target.closest('a') || e.target.closest('#musicToggle')) return;
+
+    // 播放叮咚音效
+    if (window.playClickSound) window.playClickSound();
+
+    const emoji = popEmojis[Math.floor(Math.random() * popEmojis.length)];
+    const blessing = popBlessings[Math.floor(Math.random() * popBlessings.length)];
+
+    // Create emoji pop
+    const emojiEl = document.createElement('div');
+    emojiEl.className = 'pop-item';
+    emojiEl.textContent = emoji;
+    emojiEl.style.left = e.clientX + 'px';
+    emojiEl.style.top = e.clientY + 'px';
+    document.body.appendChild(emojiEl);
+
+    // Create blessing text pop (slightly offset)
+    const textEl = document.createElement('div');
+    textEl.className = 'pop-item';
+    textEl.textContent = blessing;
+    textEl.style.left = (e.clientX + 30) + 'px';
+    textEl.style.top = (e.clientY - 30) + 'px';
+    textEl.style.fontSize = '1.1rem';
+    textEl.style.fontWeight = 'bold';
+    textEl.style.color = '#FF6B9D';
+    textEl.style.textShadow = '0 2px 4px rgba(0,0,0,0.1)';
+    textEl.style.animationDuration = '1.5s';
+    document.body.appendChild(textEl);
+
+    // Cleanup after animation
+    setTimeout(() => {
+      emojiEl.remove();
+      textEl.remove();
+    }, 1600);
+  });
+
+  // Touch devices: use touch event for better mobile experience
+  document.addEventListener('touchstart', function(e) {
+    // Let the click handler do the work (touchend triggers click)
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>
