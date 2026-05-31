@@ -18,14 +18,23 @@
     canvas.height = window.innerHeight;
   }
   resize();
+
+  // 防抖 resize（避免窗口拖动时频繁重绘）
+  let starResizeTimer;
   window.addEventListener('resize', () => {
-    resize();
-    initStars();
+    clearTimeout(starResizeTimer);
+    starResizeTimer = setTimeout(() => {
+      resize();
+      initStars();
+    }, 200);
   });
 
   function initStars() {
     stars = [];
-    const count = Math.floor((canvas.width * canvas.height) / 800); // 密度自适应
+    // 移动端进一步降低星星密度
+    const isMobile = canvas.width < 768;
+    const densityDivisor = isMobile ? 1600 : 800;
+    const count = Math.floor((canvas.width * canvas.height) / densityDivisor);
     for (let i = 0; i < count; i++) {
       stars.push({
         x: Math.random() * canvas.width,
@@ -51,6 +60,12 @@
   }
 
   function animate() {
+    // 页面不可见时跳过绘制（但保持循环以便恢复）
+    if (document.hidden) {
+      animationId = requestAnimationFrame(animate);
+      return;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // 绘制星星
@@ -202,20 +217,31 @@ function initParticles() {
     canvas.height = window.innerHeight;
   }
   resize();
-  window.addEventListener('resize', resize);
+
+  // 防抖 resize
+  let particleResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(particleResizeTimer);
+    particleResizeTimer = setTimeout(resize, 200);
+  });
 
   // 检测是否为触摸设备（降低粒子密度）
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const particleRate = isTouchDevice ? 1 : 2;
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+  // 节流：移动端 touchmove 频率极高，限制粒子生成速率
+  let lastParticleTime = 0;
+  const PARTICLE_THROTTLE = isTouchDevice ? 50 : 16; // 触摸设备 20fps，桌面 60fps
 
-    for (let i = 0; i < particleRate; i++) {
+  function spawnParticles(cx, cy, rate) {
+    const now = performance.now();
+    if (now - lastParticleTime < PARTICLE_THROTTLE) return;
+    lastParticleTime = now;
+
+    for (let i = 0; i < rate; i++) {
       particles.push({
-        x: mouseX + (Math.random() - 0.5) * 20,
-        y: mouseY + (Math.random() - 0.5) * 20,
+        x: cx + (Math.random() - 0.5) * 20,
+        y: cy + (Math.random() - 0.5) * 20,
         vx: (Math.random() - 0.5) * 2,
         vy: (Math.random() - 0.5) * 2,
         life: 1,
@@ -223,28 +249,35 @@ function initParticles() {
         size: 1.5 + Math.random() * 3,
       });
     }
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    spawnParticles(mouseX, mouseY, particleRate);
   });
 
-  // 触摸设备手指跟随
+  // 触摸设备手指跟随（节流）
+  let lastTouchTime = 0;
   document.addEventListener('touchmove', (e) => {
     if (e.touches.length > 0) {
       mouseX = e.touches[0].clientX;
       mouseY = e.touches[0].clientY;
-      for (let i = 0; i < particleRate; i++) {
-        particles.push({
-          x: mouseX + (Math.random() - 0.5) * 20,
-          y: mouseY + (Math.random() - 0.5) * 20,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2,
-          life: 1,
-          decay: 0.015 + Math.random() * 0.03,
-          size: 1.5 + Math.random() * 3,
-        });
-      }
+      // 触摸事件更激进地节流（30fps 足够流畅）
+      const now = performance.now();
+      if (now - lastTouchTime < 33) return;
+      lastTouchTime = now;
+      spawnParticles(mouseX, mouseY, particleRate);
     }
   }, { passive: true });
 
   function animate() {
+    // 页面不可见时跳过绘制
+    if (document.hidden) {
+      requestAnimationFrame(animate);
+      return;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     particles = particles.filter(p => p.life > 0);
@@ -310,6 +343,23 @@ function initNavigation() {
       }
     }
   });
+
+  // 移动端左滑关闭菜单
+  if (navInner) {
+    let touchStartX = 0;
+    navInner.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    navInner.addEventListener('touchmove', (e) => {
+      if (!navInner.classList.contains('open')) return;
+      const deltaX = e.touches[0].clientX - touchStartX;
+      // 左滑超过 60px 关闭菜单
+      if (deltaX < -60) {
+        navInner.classList.remove('open');
+      }
+    }, { passive: true });
+  }
 
   // 滚动时高亮当前板块
   function highlightNav() {
@@ -996,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tw = new Typewriter(twEl, [
       '电子信息工程 / 热爱硬件与代码',
       '在电路与程序之间寻找创造的乐趣',
-      '欢迎来到我的小天地 ✨'
+      '欢迎来到我的世界 ✨'
     ], { speed: 70, pause: 2500 });
     tw.start();
   }
@@ -1013,8 +1063,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // 音乐角
   initMusicCorner();
 
-  // 电路板背景
-  initCircuitBoard();
+  // 非关键初始化延迟到空闲时执行（减少首帧阻塞）
+  const runDeferred = window.requestIdleCallback || setTimeout;
+  runDeferred(() => {
+    initCircuitBoard();
+  });
 
   // 标签云
   initTagCloud();
